@@ -305,8 +305,8 @@ function Invoke-NetRipper {
         )
 
         # some basic arch detection
-        $64bitCPU = $(Get-ProcAddress kernel32.dll IsWow64Process)
-        $PowerShell32bit = $([IntPtr]::Size -eq 4)
+        $32bitCPU = $(Get-ProcAddress kernel32.dll IsWow32Process)
+        $PowerShell64bit = $([IntPtr]::Size -eq 4)
 
         Write-Verbose "Injecting DLL into into PID: $ProcessId"
         # Open a handle to the process you want to inject into
@@ -317,7 +317,7 @@ function Invoke-NetRipper {
             Throw "Unable to open a process handle for PID: $ProcessID"
         }
 
-        $IsWow64 = $false
+        $IsWow32 = $false
         [Byte[]]$RawBytes = $()
 
         if ($64bitCPU) # Only perform theses checks if CPU is 64-bit
