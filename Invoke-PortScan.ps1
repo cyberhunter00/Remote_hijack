@@ -1,3 +1,5 @@
+function Invoke-PortScan {
+
 <#
 .SYNOPSIS
 Nihsang payload which Scan IP-Addresses, Ports and HostNames
