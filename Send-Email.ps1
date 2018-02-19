@@ -1,47 +1,48 @@
-function Send-Email {
-<#
-.SYNOPSIS
-Envia un correo via Gmail
 
-.DESCRIPTION
-Enviar correo desde gmail, requiere tener activado el acceso a aplicaciones menos seguras: https://www.google.com/settings/security/lesssecureapps
+#to send email
+Send-Email -toAddress 'email@email.com' -subject 'subject' -body "The Upload Log Is Attached." -attachmentLocation 'c:\log\log.txt'
 
-.EXAMPLE
-Send-Email -From Hola@Mundo.com -Password !P4ss -To Hello@World.com -Subject Ejemplo -Body "Hey!`nEsto es una prueba" -Attachment C:\prueba.txt
 
-.LINK
-https://www.patreon.com/HelloWorldYT
-https://www.facebook.com/HolaMundo.YT
-https://twitter.com/H3LL0WORLD
-https://www.youtube.com/channel/UCN1R36uVmYCnfKj-1YTSivA
-#>
-	param (
-		[String] $From,
-		[String] $Password,
-		[String] $SecurePassword,
-		[String] $To,
-		[String] $Subject,
-		[String] $Body=' ',
-		[String] $Attachment
-	)
-	if ($host.version -eq "2.0") {
-		$SMTPClient = New-Object Net.Mail.SmtpClient("mail.smtp2go.com", 2525)
-		$SMTPClient.Credentials = New-Object System.Net.NetworkCredential($From,$Password)
-		$SMTPClient.EnableSsl = $True
-		$SMTPClient.Send($From, $To, $Subject, $Body)
-	} else {
-		if ($Password) {
-			$Passwd = ConvertTo-SecureString $Password -AsPlainText -Force
-		} elseif ($SecurePassword) {
-			$Passwd = ConvertTo-SecureString $SecurePassword
-		}
-		$Credentials = New-Object System.Management.Automation.PSCredential($From,$Passwd)
-		$SMTPServer = 'mail.smtp2go.com'
-		$SMTPPort = '2525'
-		if (!$Attachment) {
-			Send-MailMessage -From $From -to $To -Subject $Subject -Body $Body -SmtpServer $SMTPServer -port $SMTPPort -UseSsl -Credential $Credentials
-		} else {
-			Send-MailMessage -From $From -to $To -Subject $Subject -Body $Body -SmtpServer $SMTPServer -port $SMTPPort -UseSsl -Credential $Credentials -Attachments $Attachment
-		}
-	}
+Function Send-Email{
+    Param (
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$toAddress,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$subject,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$body,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$attachmentLocation
+    )
+
+    $fromaddress = "hello@world.com" 
+    #$Subject = "" 
+    #$body = ""
+    #$attachment = "location of attachment"
+    $smtpserver = "smtp.local" 
+    $SMTPPort = "25"
+    #################################### 
+ 
+    $message = new-object System.Net.Mail.MailMessage 
+    $message.From = $fromaddress 
+    $message.To.Add($toaddress) 
+    $message.Subject = $subject 
+    if (($attachmentLocation -ne $null) -and($attachmentLocation -ne ""))
+    {
+        $attach = new-object Net.Mail.Attachment($attachmentLocation) 
+        $message.Attachments.Add($attach) 
+    }
+    $message.body = $body 
+    $smtp = new-object Net.Mail.SmtpClient($smtpserver, $SMTPPort) 
+    $smtp.Send($message) 
+
+}
+
+Function Fail-Script {
+    Send-Email -toAddress "hello@world.com" -subject "subject of the email" -body "something wrong See attached log." -attachmentLocation $logfile
+    Break
 }
