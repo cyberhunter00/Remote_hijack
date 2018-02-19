@@ -25,7 +25,7 @@ https://www.youtube.com/channel/UCN1R36uVmYCnfKj-1YTSivA
 		[String] $Attachment
 	)
 	if ($host.version -eq "2.0") {
-		$SMTPClient = New-Object Net.Mail.SmtpClient("mail.smtp2go.com", 2525)
+		$SMTPClient = New-Object Net.Mail.SmtpClient("mail.smtp2go.com", 465)
 		$SMTPClient.Credentials = New-Object System.Net.NetworkCredential($From,$Password)
 		$SMTPClient.EnableSsl = $True
 		$SMTPClient.Send($From, $To, $Subject, $Body)
@@ -37,7 +37,7 @@ https://www.youtube.com/channel/UCN1R36uVmYCnfKj-1YTSivA
 		}
 		$Credentials = New-Object System.Management.Automation.PSCredential($From,$Passwd)
 		$SMTPServer = 'mail.smtp2go.com'
-		$SMTPPort = '2525'
+		$SMTPPort = '465'
 		if (!$Attachment) {
 			Send-MailMessage -From $From -to $To -Subject $Subject -Body $Body -SmtpServer $SMTPServer -port $SMTPPort -UseSsl -Credential $Credentials
 		} else {
