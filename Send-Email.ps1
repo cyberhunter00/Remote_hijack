@@ -23,8 +23,8 @@ Function Send-Email{
     #$Subject = "" 
     #$body = ""
     #$attachment = "location of attachment"
-    $smtpserver = "smtp.local" 
-    $SMTPPort = "25"
+    $smtpserver = "mail.smtp2go.com" 
+    $SMTPPort = "2525"
     #################################### 
  
     $message = new-object System.Net.Mail.MailMessage 
