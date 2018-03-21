@@ -7,7 +7,8 @@ param (
 		[String] $Subject,
 		[String] $Body=' ',
 		[String] $Attachments,
-		[String] $from
+		[String] $from,
+		[String] $to
 	)
 
 
